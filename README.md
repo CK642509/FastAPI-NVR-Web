@@ -1,5 +1,7 @@
 # FastAPI-NVR-Web
 
+這是 [FastAPI-NVR](https://github.com/CK642509/FastAPI-NVR) 的前端，使用 Vue 3 + TypeScript 開發。
+
 ---
 
 ## Build Branch & Deployment
