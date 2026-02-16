@@ -11,7 +11,7 @@ $ErrorActionPreference = "Stop"
 # 設定路徑
 $ProjectDir = Split-Path -Parent $PSScriptRoot
 $BuildWorktreeDir = Join-Path (Split-Path -Parent $ProjectDir) "FastAPI-NVR-Web-build"
-$RendererOutputDir = Join-Path $ProjectDir "out\renderer"
+$DistDir = Join-Path $ProjectDir "dist"
 
 Write-Host "=== FastAPI NVR Web Build Deploy Script ===" -ForegroundColor Cyan
 Write-Host ""
@@ -32,19 +32,19 @@ if ([string]::IsNullOrEmpty($CommitMessage)) {
 }
 
 # 2. 執行構建
-Write-Host "[2/6] Running npm run build:win..." -ForegroundColor Yellow
-npm run build:win
+Write-Host "[2/6] Running npm run build..." -ForegroundColor Yellow
+npm run build
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Build failed!" -ForegroundColor Red
     exit 1
 }
 
-# 3. 確認 out/renderer 存在
-if (-not (Test-Path $RendererOutputDir)) {
-    Write-Host "Error: $RendererOutputDir does not exist!" -ForegroundColor Red
+# 3. 確認 dist 存在
+if (-not (Test-Path $DistDir)) {
+    Write-Host "Error: $DistDir does not exist!" -ForegroundColor Red
     exit 1
 }
-Write-Host "[3/6] Build output verified at: $RendererOutputDir" -ForegroundColor Green
+Write-Host "[3/6] Build output verified at: $DistDir" -ForegroundColor Green
 
 # 4. 確認 worktree 存在
 Write-Host "[4/6] Checking build worktree..." -ForegroundColor Yellow
@@ -60,8 +60,8 @@ Write-Host "[5/6] Syncing build output to build branch..." -ForegroundColor Yell
 # 清空 build worktree（保留 .git 和 README.md）
 Get-ChildItem -Path $BuildWorktreeDir -Exclude ".git", "README.md" | Remove-Item -Recurse -Force
 
-# 複製 renderer 輸出
-Copy-Item -Path "$RendererOutputDir\*" -Destination $BuildWorktreeDir -Recurse -Force
+# 複製 dist 輸出
+Copy-Item -Path "$DistDir\*" -Destination $BuildWorktreeDir -Recurse -Force
 
 Write-Host "Files copied successfully!" -ForegroundColor Green
 
