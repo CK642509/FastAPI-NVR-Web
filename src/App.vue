@@ -1,11 +1,16 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
-</template>
+  <v-app>
+    <v-app-bar color="surface" flat density="comfortable">
+      <template #prepend>
+        <v-icon icon="mdi-cctv" class="ml-2" />
+      </template>
+      <v-app-bar-title class="font-weight-bold">FastAPI-NVR</v-app-bar-title>
+    </v-app-bar>
 
-<style scoped></style>
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
+</template>

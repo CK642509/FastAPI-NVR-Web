@@ -2,6 +2,40 @@
 
 這是 [FastAPI-NVR](https://github.com/CK642509/FastAPI-NVR) 的前端，使用 Vue 3 + TypeScript 開發。
 
+技術：Vue 3 + TypeScript、Vuetify 4（Material Design）、Pinia、Vue Router、Vite。
+
+---
+
+## 開發（Phase 2）
+
+Phase 2 前端是單一即時監控頁（`src/views/LiveView.vue`）：MJPEG 即時畫面 + 錄影開關 +
+狀態。畫面與控制都打後端 `/api/cameras/{id}/...`（Phase 2 為單一攝影機，id 固定 `1`）。
+
+```bash
+npm install
+npm run dev          # Vite dev server（http://localhost:5173）
+npm run build        # type-check (vue-tsc) + vite build → dist/
+npm run type-check   # 僅型別檢查
+npm run format       # prettier
+```
+
+**後端連線**：`vite.config.ts` 把 `/api` proxy 到 `http://localhost:8000`（FastAPI 後端，
+含 MJPEG 串流），所以開發時請先啟動後端（見 `FastAPI-NVR/backend/README.md`）。正式環境
+則由 Caddy 以同源方式同時提供前端靜態檔與 `/api`。可用 `VITE_API_BASE` 覆寫 API 基底。
+
+前端結構：
+
+```
+src/
+├─ api/          # client.ts（fetch 包裝）、cameras.ts（端點）
+├─ stores/       # camera.ts（Pinia：錄影狀態 + 開關，每 2s 輪詢）
+├─ plugins/      # vuetify.ts（深色主題）
+├─ views/        # LiveView.vue（即時畫面 + 錄影控制）
+├─ router/       # 路由（/ → LiveView）
+├─ App.vue       # Vuetify app shell（app bar + router-view）
+└─ main.ts
+```
+
 ---
 
 ## Build Branch & Deployment
